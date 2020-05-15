@@ -33,6 +33,9 @@ var game = 1;
 var new_colour = 0;
 var change_colour = 500;
 var pp =1;
+var lower_speed = 1;
+var upper_speed = 2;
+var height = 1000;
 function init(){
 	const canvas = document.getElementById("canvas");
 	ctx= canvas.getContext('2d');
@@ -53,10 +56,15 @@ function init(){
 	init.storescore = setInterval(store_score,5);
 	document.addEventListener('keydown', keyDown, false);
 	document.addEventListener('keyup', keyUp, false);
+	ctx.lineWidth = 2;
 	ctx.beginPath();
     ctx.moveTo(330,0);
     ctx.lineTo(330, 600);
     ctx.stroke();
+	ctx.clearRect(350,200,500,150);
+	ctx.fillStyle = "black";
+	ctx.font = '20px serif';
+	ctx.fillText("Press X to Pause",350,300);
 }
 function clear_canvas(){
 	const canvas = document.getElementById("canvas");
@@ -82,9 +90,9 @@ function jump(){
 	const canvas = document.getElementById("canvas");
 	ctx= canvas.getContext('2d');
 	var jump_sound = document.getElementById('jump_sound');
-	jump_sound.pause();
+	/*jump_sound.pause();
 	jump_sound.currentTime = 0;
-	jump_sound.play();
+	jump_sound.play();*/
 	jump.move=setInterval(draw,20);
 }
 function draw(){
@@ -199,14 +207,23 @@ function keyDown(e) {
 		init.rotate = setInterval(rotate_concircles,30);
 		jump.move = setInterval(draw,20)
 		pp = 1;
+		var ctx = document.getElementById('canvas').getContext('2d');
+		ctx.clearRect(350,200,200,150);
+		ctx.fillStyle = "black";
+		ctx.font = '20px serif';
+		ctx.fillText("Press X to Pause",350,300);
 	}
 	else{
-		//alert("pause");
 		clearInterval(init.draw_ball);
 		clearInterval(init.rotate);
 		clearInterval(jump.move);
 		game = 0;
 		pp = 0;
+		var ctx = document.getElementById('canvas').getContext('2d');
+		ctx.clearRect(350,200,500,150);
+		ctx.fillStyle = "black";
+		ctx.font = '20px serif';
+		ctx.fillText("Press X to Play",350,300);
 		  
 	  }
   }
@@ -269,7 +286,7 @@ function generate_concircles(){
 	const canvas = document.getElementById("canvas");
 	ctx= canvas.getContext('2d');
 	for ( i = 0; i<circleTotal; i++){
-		var circle_rotate_speed=random(1,4);
+		var circle_rotate_speed=random(lower_speed,upper_speed);
 		var circle_r1 = random(70,80);
 		var circle_r2 = random(90,100);
 		concircles.push([circle_x,circle_y,circle_r1,circle_r2,circle_vertical_speed,circle_rotate,colour1,colour2,circle_rotate_speed]);
@@ -370,7 +387,7 @@ function new_position(){
 	//alert("hello word");
  	for( i = 0; i < circleTotal; i++){
 		if( concircles[i][1] >= 600+concircles[i][3]){
-			var circle_rotate_speed=random(1,4);
+			var circle_rotate_speed=random(lower_speed,upper_speed);
 			concircles[i][1] = -200;
 			concircles[i][8] = circle_rotate_speed;
 		}
@@ -387,7 +404,6 @@ function newColour(){
 	//new_colour = 0;*/
 }
 function highscore(){
-	var height=600;
 	if(highScore >= 285){
 		clearInterval(init.high_scores);
 		highScore+=5;
@@ -396,6 +412,11 @@ function highscore(){
 	if(585-highScore > y){
 		highScore = 585-y;
 		//height = y;
+	}
+	if(highScore > height){
+		upper_speed+=1;
+		lower_speed+=1;
+		height+=1000;
 	}
 	var ctx = document.getElementById('canvas').getContext('2d');
 	ctx.clearRect(350,0,500,100);
