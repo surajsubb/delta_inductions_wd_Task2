@@ -90,9 +90,9 @@ function jump(){
 	const canvas = document.getElementById("canvas");
 	ctx= canvas.getContext('2d');
 	var jump_sound = document.getElementById('jump_sound');
-	/*jump_sound.pause();
+	jump_sound.pause();
 	jump_sound.currentTime = 0;
-	jump_sound.play();*/
+	jump_sound.play();
 	jump.move=setInterval(draw,20);
 }
 function draw(){
